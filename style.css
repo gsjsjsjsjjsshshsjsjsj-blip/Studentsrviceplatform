@@ -1,0 +1,740 @@
+/* ================================================================== */
+/*      1. المتغيرات العامة والأنماط الأساسية                         */
+/* ================================================================== */
+:root {
+    --msc-card-height: 580px;
+    --msc-card-width: 360px;
+    --msc-primary-color: #0ea5e9;
+    --msc-primary-color-dark: #0284c7;
+    --msc-gold-color: #c9a44e;
+    --msc-purple-color: #8b5cf6;
+    --msc-bg-color: #ffffff;
+    --msc-text-primary: #1e293b;
+    --msc-text-secondary: #475569;
+    --msc-whatsapp-color: #25D366;
+    --danger-color: #ef4444;
+    --danger-hover: #dc2626;
+    --border-color: #e2e8f0;
+    /* -- تحسين: إضافة متغيرات جديدة للتحكم في الحركات -- */
+    --transition-speed-fast: 0.2s;
+    --transition-speed-normal: 0.3s;
+    --transition-speed-slow: 0.5s;
+}
+
+{
+    font-family: 'Cairo', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 20px;
+    perspective: 1500px;
+}
+
+/* -- تحسين: تخصيص شريط التمرير ليتناسب مع التصميم -- */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+
+/* ================================================================== */
+/*      2. أنماط بطاقة الخدمة الرئيسية (تبقى كما هي)                   */
+/* ================================================================== */
+.msc-service-card { position: relative; width: var(--msc-card-width); max-width: 100%; height: var(--msc-card-height); background: var(--msc-bg-color); border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); border: 2px solid var(--msc-gold-color); display: flex; flex-direction: column; transition: transform 0.1s ease, box-shadow 0.4s ease; transform-style: preserve-3d; overflow: hidden; }
+.msc-service-card:hover { box-shadow: 0 20px 40px rgba(201, 164, 78, 0.2); }
+.msc-card-image-section { height: 25%; background: url('https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=500' ) no-repeat center center/cover; position: relative; display: flex; justify-content: center; align-items: flex-end; padding: 20px; box-sizing: border-box; flex-shrink: 0; }
+.msc-card-image-section::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(10, 10, 10, 0.8) 10%, transparent 70%); }
+.msc-card-title { position: relative; z-index: 2; background-color: var(--msc-purple-color); color: #fff; font-size: 22px; font-weight: 700; padding: 8px 25px; border-radius: 12px; transform: translateZ(40px) translateY(10px); box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); border: 1px solid rgba(255, 255, 255, 0.3); }
+.msc-card-details-section { flex-grow: 1; padding: 15px 20px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start; border-top: 2px solid var(--msc-gold-color); transform: translateZ(20px); background-color: #f8fafc; }
+.msc-price-badge { position: absolute; top: 15px; right: 2px; background: linear-gradient(45deg, #c084fc, #8b5cf6); color: white; padding: 6px 12px; border-radius: 50px; font-size: 11px; font-weight: 700; box-shadow: 0 3px 8px rgba(139, 92, 246, 0.2); z-index: 5; white-space: nowrap; }
+.msc-details-header { display: flex; justify-content: flex-end; align-items: center; width: 100%; margin-bottom: 20px; }
+.msc-card-delivery { background: linear-gradient(45deg, var(--msc-primary-color), var(--msc-primary-color-dark)); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 13px; font-weight: 700; box-shadow: 0 2px 8px rgba(14, 165, 233, 0.25); }
+.shiny-buttons-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.8rem; width: 100%; margin: auto 0; }
+.shiny-tag { padding: 0.2rem 0.6rem; border-radius: 10px; font-size: 0.85rem; font-weight: 600; color: #ffffff; cursor: default; user-select: none; text-align: center; border: 1px solid rgba(0, 0, 0, 0.1); position: relative; overflow: hidden; transition: transform 0.2s ease-out, box-shadow 0.3s ease-out; }
+.shiny-tag::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 50%; background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05)); z-index: 1; }
+.shiny-tag::after { content: ''; position: absolute; top: -50%; left: 0; width: 20%; height: 200%; background: rgba(255, 255, 255, 0.4); z-index: 1; animation-name: shine-loop; animation-duration: 4s; animation-iteration-count: infinite; animation-timing-function: ease-in-out; }
+.shiny-tag:nth-of-type(1) { background-color: var(--msc-primary-color); } .shiny-tag:nth-of-type(1)::after { animation-delay: 0.5s; } .shiny-tag:nth-of-type(2) { background-color: var(--msc-purple-color); } .shiny-tag:nth-of-type(2)::after { animation-delay: 1.2s; } .shiny-tag:nth-of-type(3) { background-color: var(--msc-primary-color-dark); } .shiny-tag:nth-of-type(3)::after { animation-delay: 0.2s; } .shiny-tag:nth-of-type(4) { background-color: #6d28d9; } .shiny-tag:nth-of-type(4)::after { animation-delay: 2.5s; } .shiny-tag:nth-of-type(5) { background-color: var(--msc-primary-color); } .shiny-tag:nth-of-type(5)::after { animation-delay: 1.8s; } .shiny-tag:nth-of-type(6) { background-color: var(--msc-purple-color); } .shiny-tag:nth-of-type(6)::after { animation-delay: 3s; }
+.shiny-tag:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+.msc-card-actions-section { padding: 11px 20px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; transform: translateZ(30px); border-top: 2px solid var(--msc-gold-color); flex-shrink: 0; }
+.msc-stats-bar { display: flex; justify-content: space-around; align-items: center; margin-bottom: 15px; background: #f1f5f9; padding: 8px; border-radius: 12px; border: 1px solid var(--msc-gold-color); }
+.msc-stat-item { display: flex; align-items: center; gap: 8px; color: var(--msc-text-secondary); transition: color 0.3s; cursor: pointer; }
+.msc-stat-item:hover { color: var(--msc-text-primary); } .msc-stat-item i { font-size: 16px; } .msc-stat-item .fa-star { color: #facc15; } .msc-stat-item .fa-eye { color: #60a5fa; } .msc-stat-item .fa-heart { color: transparent; -webkit-text-stroke: 2px red; transition: transform 0.3s, color 0.3s; } .msc-stat-item .fa-heart.liked { color: red; -webkit-text-stroke: 0; }
+.msc-buttons-group { display: flex; gap: 15px; margin-top: 15px; }
+.msc-btn { flex-grow: 1; padding: 11px; border-radius: 8px; border: none; font-family: 'Cairo', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; text-align: center; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 10px; transform: translateZ(20px); }
+.msc-btn-primary { background-color: var(--msc-primary-color); color: #ffffff; border: 1px solid var(--msc-primary-color); }
+.msc-btn-primary:hover { background-color: var(--msc-primary-color-dark); border-color: var(--msc-primary-color-dark); }
+.msc-btn-whatsapp { background-color: var(--msc-whatsapp-color); color: #fff; }
+.msc-btn-whatsapp:hover { background-color: #1da851; }
+.msc-overall-rating { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 50px; font-size: 14px; color: gold; z-index: 10; display: flex; align-items: center; gap: 5px; backdrop-filter: blur(5px); }
+.msc-rating { display: flex; justify-content: center; gap: 8px; font-size: 24px; cursor: pointer; margin-bottom: 15px; }
+.msc-rating i { color: transparent; -webkit-text-stroke: 2px gold; transition: transform 0.2s, color 0.2s; }
+.msc-rating:hover i { transform: scale(1.1); } .msc-rating i.active, .msc-rating i:hover { color: gold; -webkit-text-stroke: 0; transform: scale(1.2); } .msc-rating i:hover ~ i { color: transparent; -webkit-text-stroke: 2px gold; } .msc-rating i.active { animation: pop 0.4s ease; }
+
+
+/* ================================================================== */
+/*      3. أنماط النوافذ المنبثقة (تحسينات احترافية)                  */
+/* ================================================================== */
+.msc-details-popup {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.6);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    /* -- تحسين: استخدام متغيرات السرعة وتغيير نوع الحركة -- */
+    transition: opacity var(--transition-speed-normal) cubic-bezier(0.4, 0, 0.2, 1), 
+                visibility var(--transition-speed-normal) cubic-bezier(0.4, 0, 0.2, 1);
+    /* -- تحسين: إضافة تأثير Parallax عند التمرير -- */
+    perspective: 1000px;
+}
+
+.msc-details-popup.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.msc-details-popup-content {
+    
+    background-color: var(--msc-bg-color);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid var(--msc-gold-color);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    /* -- تحسين: تغيير الحركة لتكون أكثر نعومة -- */
+    transform: translateY(20px) rotateX(-5deg) scale(0.95);
+    transition: transform var(--transition-speed-slow) cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    position: absolute;
+}
+
+.msc-details-popup.show .msc-details-popup-content {
+    /* -- تحسين: حالة الدخول النهائية للنافذة -- */
+    transform: translateY(0) rotateX(0) scale(1);
+}
+
+.msc-details-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    border-bottom: 2px solid var(--msc-gold-color);
+    background-color: #f8fafc;
+    border-radius: 18px 18px 0 0;
+    gap: 1rem;
+    position: sticky; /* -- تحسين: تثبيت الهيدر في الأعلى عند التمرير -- */
+    top: 0;
+    z-index: 10;
+}
+
+.msc-details-popup-header h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--msc-text-primary);
+    
+    /* --- بداية الحل --- */
+    flex-grow: 1; /* اسمح للعنصر بالنمو ليملأ المساحة الفارغة */
+    min-width: 0; /* امنع العنصر من التمدد بشكل غير مرغوب فيه */
+    white-space: nowrap; /* امنع النص من الالتفاف إلى سطر جديد */
+    overflow: hidden; /* إخفاء أي جزء من النص لا يتسع للعرض */
+    text-overflow: ellipsis; /* إضافة "..." إذا كان النص طويلاً جداً */
+    /* --- نهاية الحل --- */
+
+    position: relative;
+    padding-bottom: 8px;
+}
+
+
+.msc-details-popup-close-btn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: var(--msc-text-secondary);
+    cursor: pointer;
+    transition: color var(--transition-speed-fast), transform var(--transition-speed-fast);
+}
+
+.msc-details-popup-close-btn:hover {
+    color: var(--danger-color);
+    transform: rotate(90deg) scale(1.1);
+}
+
+#searchInput {
+    border: 1px solid var(--border-color);
+    border-radius: 50px;
+    padding: 0.4rem 1rem;
+    width: 100%;
+    max-width: 220px;
+    font-family: 'Cairo', sans-serif;
+    transition: border-color var(--transition-speed-fast), box-shadow var(--transition-speed-fast);
+    top: 0;
+}
+
+#searchInput:focus {
+    outline: none;
+    border-color: var(--msc-primary-color);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.3);
+}
+
+.service-list-container {
+    overflow-y: auto;
+    flex-grow: 1;
+    padding: 1.5rem;
+}
+
+.service-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.service-list li {
+    position: relative;
+    background: var(--msc-bg-color);
+    margin-bottom: 1rem;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 1rem;
+    overflow: hidden;
+    /* -- تحسين: إضافة حركة دخول متتالية للعناصر -- */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slide-in 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* -- تحسين: تطبيق تأخير متتالي على حركة الدخول -- */
+.service-list li:nth-child(1) { animation-delay: 0.1s; }
+.service-list li:nth-child(2) { animation-delay: 0.15s; }
+.service-list li:nth-child(3) { animation-delay: 0.2s; }
+.service-list li:nth-child(4) { animation-delay: 0.25s; }
+.service-list li:nth-child(5) { animation-delay: 0.3s; }
+/* ... يمكنك إضافة المزيد حسب الحاجة */
+
+.service-list li:hover {
+    background-color: #f8fafc;
+    border-color: #d1d5db;
+    transform: translateY(-4px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+}
+
+.service-list li.hidden {
+    display: none;
+}
+
+.service-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.service-details .service-name { /* -- تحسين: تمييز اسم الخدمة -- */
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--msc-text-primary);
+}
+
+.service-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.action-btn {
+    text-decoration: none;
+    color: #fff;
+    background: var(--msc-primary-color);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    /* -- تحسين: إضافة حركة للأزرار -- */
+    transform: scale(1);
+    transition: background-color var(--transition-speed-normal), transform var(--transition-speed-fast);
+}
+
+.action-btn:hover {
+    background-color: var(--msc-primary-color-dark);
+    transform: scale(1.05); /* -- تحسين: تكبير بسيط عند التمرير -- */
+}
+
+.details-btn {
+    background: #e2e8f0;
+    color: var(--msc-text-secondary);
+}
+
+.details-btn:hover {
+    background: #cbd5e1;
+    color: var(--msc-text-primary);
+}
+.msc-details-popup-footer {
+    padding: 1rem 1.5rem;
+    border-top: 2px solid var(--msc-gold-color);
+    background-color: #f8fafc;
+    display: flex;
+    justify-content: space-between; /* <-- التغيير هنا: لتوزيع العناصر */
+    align-items: center; /* لمحاذاة الأزرار عمودياً */
+    flex-shrink: 0;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    gap: 1rem; 
+}
+/* -- تحسين: تعديل حجم الأزرار داخل ذيل النافذة المنبثقة -- */
+.msc-details-popup-footer .action-btn {
+    padding: 6px 12px; /* تقليل الحشو الداخلي للزر */
+    font-size: 11px;   /* تصغير حجم الخط */
+    gap: 8px;          /* تقليل المسافة بين النص والأيقونة داخل الزر */
+}
+
+
+
+.reset-btn {
+    background-color: var(--danger-color);
+}
+
+.reset-btn:hover {
+    background-color: var(--danger-hover);
+}
+
+.interactive-rating { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+.interactive-rating i { font-size: 20px; color: transparent; -webkit-text-stroke: 1.5px gold; transition: transform var(--transition-speed-fast), color var(--transition-speed-fast); }
+.interactive-rating:hover i { transform: scale(1.1); }
+.interactive-rating i.active, .interactive-rating i:hover { color: gold; -webkit-text-stroke: 0; transform: scale(1.2); }
+.interactive-rating i:hover ~ i { color: transparent; -webkit-text-stroke: 1.5px gold; }
+.interactive-rating i.pop { animation: pop 0.4s ease; }
+
+.like-btn { cursor: pointer; color: var(--msc-text-secondary); font-size: 20px; display: flex; align-items: center; gap: 5px; transition: color var(--transition-speed-fast), transform var(--transition-speed-fast); }
+.like-btn .fa-heart { transition: color var(--transition-speed-normal), transform var(--transition-speed-normal); color: transparent; -webkit-text-stroke: 2px var(--danger-color); }
+.like-btn.liked .fa-heart { color: var(--danger-color); -webkit-text-stroke: 0; }
+.like-btn span { font-size: 14px; color: var(--msc-text-secondary); }
+
+
+
+/* ================================================================== */
+/*      4. أنماط الإشعارات ونافذة التفاصيل                            */
+/* ================================================================== */
+.toast {
+    position: fixed;
+    top: 20px; /* تغيير: من الأسفل إلى الأعلى */
+    left: 50%; /* تغيير: ليتوسط الشاشة أفقياً */
+    transform: translate(-50%, -150%); /* تغيير: يبدأ مخفياً فوق الشاشة */
+    
+    background: var(--msc-purple-color);
+    color: #fff;
+    padding: 12px 20px; /* تحسين بسيط للحجم */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.21, 1.02, 0.73, 1), opacity 0.4s ease; /* تحسين الحركة */
+    font-size: 15px;
+    z-index: 9999;
+    max-width: 90%; /* لضمان عدم تمدده كثيراً على الشاشات الكبيرة */
+    text-align: center;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0); /* تغيير: ينزل إلى مكانه في الأعلى */
+}
+.modal-toast { position: absolute; top: 85px; /* -- تعديل: ليتناسب مع الهيدر المثبت -- */ left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--msc-purple-color); color: #fff; padding: 10px 18px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); opacity: 0; transition: all 0.4s ease; font-size: 14px; z-index: 101; white-space: nowrap; }
+.modal-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* -- تحسين: تنسيق النص داخل نافذة التفاصيل -- */
+#detailsModalText {
+    line-height: 1.8;
+    font-size: 16px;
+    color: var(--msc-text-secondary);
+}
+
+/* ================================================================== */
+/*      6. تحسينات إضافية على العناوين والمحتوى                      */
+/* ================================================================== */
+
+/* -- تحسين: تصميم احترافي لعنوان النافذة المنبثقة -- */
+.msc-details-popup-header h2 {
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.msc-details-popup-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 40%;
+    height: 3px;
+    background: linear-gradient(to left, var(--msc-purple-color), transparent);
+    border-radius: 2px;
+}
+
+/* -- تحسين: إعادة هيكلة عنصر الخدمة باستخدام Flexbox لحل مشكلة المحاذاة -- */
+.service-list li {
+    align-items: stretch; /* تأكد من أن العناصر الداخلية تمتد بكامل الارتفاع */
+}
+
+.service-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* هذا هو مفتاح الحل: يدفع الأزرار للأسفل دائماً */
+    gap: 1rem;
+    min-width: 0; /* ضروري لمنع العناصر من التمدد بشكل غير مرغوب */
+}
+
+/* -- تحسين: تعديل تصميم اسم الخدمة ليكون أكثر بروزاً -- */
+.service-details .service-name {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--msc-text-primary);
+    line-height: 1.4; /* تحسين قابلية القراءة إذا كان العنوان طويلاً */
+}
+
+/* -- تحسين: تعديل موقع التقييم الإجمالي ليتناسب مع التصميم الجديد -- */
+.overall-rating {
+    position: absolute;
+    top: 0;
+    left: 0; /* تم تغيير الموقع من اليمين إلى اليسار ليتناسب مع التصميم العربي */
+    background: linear-gradient(135deg, rgba(201, 164, 78, 0.9), rgba(201, 164, 78, 0.7));
+    color: white;
+    padding: 5px 12px;
+    border-radius: 0 0 12px 0; /* زوايا حادة لتلتصق بالزاوية */
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    backdrop-filter: blur(2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ================================================================== */
+/*      5. الحركات (Keyframes)                                       */
+/* ================================================================== */
+@keyframes shine-loop { 0% { transform: translateX(-110%) rotate(45deg); } 100% { transform: translateX(260%) rotate(45deg); } }
+@keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
+@keyframes heartbeat { 0% { transform: scale(1); } 30% { transform: scale(1.4); } 60% { transform: scale(0.9); } 100% { transform: scale(1); } }
+
+/* -- تحسين: حركة الدخول لعناصر القائمة -- */
+@keyframes slide-in {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* ================================================================== */
+/*      7. أنماط إضافية لنافذة التفاصيل وزر الواتساب                  */
+/* ================================================================== */
+
+/* -- تحسين: تنسيق محتوى نافذة التفاصيل -- */
+#detailsModalBody {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#detailsModalText {
+    line-height: 1.8;
+    font-size: 16px;
+    color: var(--msc-text-secondary);
+    flex-grow: 1; /* اجعل النص يأخذ المساحة المتاحة */
+}
+
+/* -- تصميم زر الواتساب الجديد في نافذة التفاصيل -- */
+.details-whatsapp-btn {
+    margin-top: 1.5rem; /* إضافة مسافة فوق الزر */
+    padding: 14px; /* جعل الزر أكبر وأوضح */
+    font-size: 17px;
+    border-radius: 12px;
+    flex-shrink: 0; /* منع الزر من التقلص */
+    animation: pulse 2s infinite; /* إضافة حركة نبض لجذب الانتباه */
+}
+
+/* -- حركة النبض للزر -- */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+    }
+    70% {
+        transform: scale(1.02);
+        box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+    }
+}
+
+/* ================================================================== */
+/*      8. تحسينات التوافق مع الهواتف ولوحة المفاتيح                  */
+/* ================================================================== */
+
+/* تغيير طريقة محاذاة النافذة لتكون أكثر استقراراً على الهواتف */
+.msc-details-popup {
+    align-items: flex-start; /* المحاذاة للأعلى بدلاً من المنتصف */
+    padding-top: 5vh; /* إضافة مسافة من الأعلى */
+    overflow-y: auto; /* السماح للنافذة نفسها بالتمرير إذا كانت الشاشة قصيرة جداً */
+}
+
+/* هذا هو الكلاس السحري الذي سيتم إضافته عبر جافاسكربت */
+/* عندما تكون لوحة المفاتيح مفتوحة... */
+body.keyboard-visible .msc-details-popup {
+    padding-top: 2vh; /* تقليل المسافة العلوية لإعطاء مساحة أكبر للمحتوى */
+    align-items: flex-start; /* التأكيد على المحاذاة للأعلى */
+}
+
+/* تعديل بسيط على النافذة نفسها لتجنب مشاكل التمرير */
+.msc-details-popup-content {
+    margin-bottom: 5vh; /* إضافة هامش سفلي لضمان عدم التصاقها بأسفل الشاشة */
+}
+/* ================================================================== */
+/*      9. أنماط رسالة "لا توجد نتائج"                               */
+/* ================================================================== */
+
+/* تعديل الحاوية لتكون مرجعية للرسالة */
+#serviceListContainer {
+    position: relative;
+}
+
+.no-results-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--msc-text-secondary);
+    width: 80%;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.no-results-message.hidden {
+    opacity: 0;
+    pointer-events: none; /* لمنع التفاعل معها وهي مخفية */
+}
+
+.no-results-message i {
+    font-size: 3rem;
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+}
+
+.no-results-message h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+    color: var(--msc-text-primary);
+}
+
+.no-results-message p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+/* ================================================================== */
+/*      10. أنماط عرض التفاصيل الاحترافي                             */
+/* ================================================================== */
+
+.details-content-area {
+    flex-grow: 1;
+}
+
+.detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem; /* 20px */
+    margin-bottom: 1.75rem; /* 28px */
+    padding-bottom: 1.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.detail-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.detail-item-icon {
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #eef2ff; /* لون أزرق فاتح جداً */
+    color: var(--msc-purple-color);
+    font-size: 1.5rem; /* 24px */
+}
+
+.detail-item-text h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem; /* 18px */
+    font-weight: 700;
+    color: var(--msc-text-primary);
+}
+
+.detail-item-text p {
+    margin: 0;
+    line-height: 1.7;
+    color: var(--msc-text-secondary);
+}
+/* ================================================================== */
+/*      11. أنماط زر طلب عرض السعر                                   */
+/* ================================================================== */
+
+.quote-btn {
+    background-color: var(--msc-whatsapp-color); /* استخدام لون واتساب للاتساق */
+}
+
+.quote-btn:hover {
+    background-color: #1da851; /* hover لزر واتساب */
+    transform: scale(1.05);
+}
+/* ================================================================== */
+/*      12. أنماط حاوية البطاقات المتعددة                             */
+/* ================================================================== */
+
+.cards-container {
+    display: flex;
+    flex-wrap: wrap; /* للسماح للبطاقات بالنزول لسطر جديد في الشاشات الصغيرة */
+    justify-content: center;
+    gap: 2rem; /* مسافة بين البطاقات */
+}
+/* ================================================================== */
+/*      13. أنماط مربع البحث الرئيسي                                 */
+/* ================================================================== */
+
+/* ================================================================== */
+/*      13. أنماط مربع البحث الرئيسي                                 */
+/* ================================================================== */
+.main-search-container {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    margin-bottom: 2.5rem;
+}
+
+.main-search-container .search-icon {
+    position: absolute;
+    top: 50%;
+    right: 70px;
+    transform: translateY(-50%);
+    color: var(--msc-text-secondary);
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+#mainCardSearch {
+    width: 70%;
+    padding: 1rem 2.5rem 1rem 1.5rem;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1rem;
+    color: var(--msc-text-primary);
+    background-color: var(--msc-bg-color);
+    border: 2px solid var(--border-color);
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    -webkit-appearance: none;
+}
+
+#mainCardSearch:focus {
+    outline: none;
+    border-color: var(--msc-primary-color);
+    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2);
+}
+
+#mainCardSearch:focus + .search-icon {
+    color: var(--msc-primary-color);
+}
+
+/* ================================================================== */
+/*      14. أنماط الإشعار الذكي (Toast with button)                   */
+/* ================================================================== */
+/* ================================================================== */
+/*      14. أنماط الإشعار متعدد الخيارات                              */
+/* ================================================================== */
+
+.multi-choice-toast {
+    flex-direction: column; /* ترتيب العناصر عمودياً */
+    align-items: flex-start; /* محاذاة لليمين (بداية السطر) */
+    max-width: 350px;
+    
+}
+
+.multi-choice-toast .toast-message {
+    margin-bottom: 12px; /* مسافة بين الرسالة والأزرار */
+    line-height: 1.6;
+}
+
+.multi-choice-toast .toast-message b {
+    color: #facc15;
+}
+
+.toast-buttons-container {
+    display: flex;
+    flex-wrap: wrap; /* السماح للأزرار بالنزول لسطر جديد */
+    gap: 10px;
+    width: 100%;
+}
+
+.multi-choice-toast .toast-button {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+    flex-grow: 1; /* جعل الأزرار تملأ المساحة */
+}
+
+.multi-choice-toast .toast-button:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ======================================================= */
+/*      أنماط تمييز نتائج البحث                          */
+/* ======================================================= */
+
+.search-highlight {
+    background-color: #fef08a; /* لون أصفر فاتح شبيه بالهايلايتر */
+    color: #713f12; /* لون نص داكن لضمان الوضوح */
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-weight: 700; /* جعل النص المميز عريضًا */
+}

@@ -1,0 +1,665 @@
+/* نافذة منبثقة لمعرض الأعمال - تصميم محسن واحترافي */
+.portfolio-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+    backdrop-filter: blur(10px);
+    z-index: 10001;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.portfolio-modal.show {
+    display: flex;
+    opacity: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.portfolio-modal-content {
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
+    border-radius: 24px;
+    max-width: 1100px;
+    width: 95%;
+    max-height: 95vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 
+        0 32px 64px rgba(0, 0, 0, 0.25),
+        0 16px 32px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transform: scale(0.8) translateY(40px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.portfolio-modal.show .portfolio-modal-content {
+    transform: scale(1) translateY(0);
+}
+
+.portfolio-modal-header {
+    position: relative;
+    padding: 40px 40px 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 24px 24px 0 0;
+    color: white;
+}
+
+.portfolio-modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: white;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.portfolio-modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.portfolio-modal-title {
+    font-size: 32px;
+    font-weight: 800;
+    margin: 0 0 15px 0;
+    text-align: right;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.portfolio-modal-category {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* شريط المعلومات السريعة */
+.portfolio-quick-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.portfolio-stat-item {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.portfolio-stat-value {
+    font-size: 24px;
+    font-weight: 800;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.portfolio-stat-label {
+    font-size: 14px;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+.portfolio-modal-body {
+    padding: 40px;
+}
+
+/* شريط الصور الأفقي المحسن */
+.portfolio-screenshots {
+    margin-bottom: 40px;
+    background: linear-gradient(145deg, #f8f9fa, #ffffff);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.portfolio-screenshots h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 20px;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.portfolio-screenshots h3::before {
+    content: "📸";
+    font-size: 28px;
+}
+
+.screenshots-container {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 15px 0;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f7fafc;
+}
+
+.screenshots-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.screenshots-container::-webkit-scrollbar-track {
+    background: #f7fafc;
+    border-radius: 10px;
+}
+
+.screenshots-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 10px;
+    border: 2px solid #f7fafc;
+}
+
+.screenshots-container::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, #5a67d8, #6b46c1);
+}
+
+.screenshot-item {
+    flex-shrink: 0;
+    width: 280px;
+    height: 200px;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 10px 25px rgba(0, 0, 0, 0.15),
+        0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    border: 3px solid transparent;
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
+}
+
+.screenshot-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.screenshot-item:hover {
+    transform: scale(1.08) translateY(-8px);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.2),
+        0 8px 16px rgba(0, 0, 0, 0.15);
+    border-color: #667eea;
+}
+
+.screenshot-item:hover::before {
+    opacity: 1;
+}
+
+.screenshot-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.screenshot-item:hover img {
+    transform: scale(1.1);
+}
+
+/* عداد الصور */
+.screenshot-counter {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    z-index: 2;
+}
+
+/* معلومات المشروع المحسنة */
+.portfolio-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+    padding: 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    color: white;
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+}
+
+.portfolio-info-item {
+    text-align: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.portfolio-info-item:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.portfolio-info-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.portfolio-info-value {
+    font-size: 28px;
+    font-weight: 800;
+    display: block;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.portfolio-info-label {
+    font-size: 16px;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+/* الوصف المحسن */
+.portfolio-description {
+    margin-bottom: 40px;
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.portfolio-description h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 20px;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.portfolio-description h3::before {
+    content: "📝";
+    font-size: 28px;
+}
+
+.portfolio-description p {
+    font-size: 18px;
+    line-height: 1.8;
+    color: #4a5568;
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+/* قائمة المميزات */
+.portfolio-features {
+    margin-top: 25px;
+}
+
+.portfolio-features h4 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 15px;
+    text-align: right;
+}
+
+.portfolio-features-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px;
+}
+
+.portfolio-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #e6fffa, #f0fff4);
+    border-radius: 12px;
+    border: 1px solid #81e6d9;
+    font-size: 16px;
+    color: #2d3748;
+    direction: rtl;
+}
+
+.portfolio-feature-item::before {
+    content: "✅";
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+/* رأي العميل المحسن */
+.portfolio-client-review {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 35px;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    color: white;
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.portfolio-client-review::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.portfolio-client-review h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+}
+
+.portfolio-client-review h3::before {
+    content: "💬";
+    font-size: 28px;
+}
+
+.portfolio-client-review-content {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.portfolio-client-review-image {
+    flex-shrink: 0;
+    width: 180px;
+    height: 120px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.portfolio-client-review-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.portfolio-client-review-image:hover img {
+    transform: scale(1.1);
+}
+
+.portfolio-client-review-text {
+    flex: 1;
+    font-size: 18px;
+    line-height: 1.7;
+    text-align: right;
+    font-style: italic;
+    position: relative;
+}
+
+.portfolio-client-review-text::before {
+    content: '"';
+    font-size: 60px;
+    position: absolute;
+    top: -20px;
+    right: -10px;
+    opacity: 0.3;
+    font-family: serif;
+}
+
+.portfolio-client-review-text::after {
+    content: '"';
+    font-size: 60px;
+    position: absolute;
+    bottom: -40px;
+    left: -10px;
+    opacity: 0.3;
+    font-family: serif;
+}
+
+/* أزرار الإجراءات المحسنة */
+.portfolio-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    padding: 30px 0;
+    border-top: 2px solid #e2e8f0;
+    margin-top: 20px;
+}
+
+.portfolio-action-btn {
+    padding: 16px 32px;
+    border: none;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+    min-width: 200px;
+    justify-content: center;
+}
+
+.portfolio-action-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.portfolio-action-btn:hover::before {
+    left: 100%;
+}
+
+.portfolio-action-btn.primary {
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    color: white;
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+}
+
+.portfolio-action-btn.primary:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(37, 211, 102, 0.4);
+}
+
+.portfolio-action-btn.secondary {
+    background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+    color: #495057;
+    border: 2px solid #dee2e6;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.portfolio-action-btn.secondary:hover {
+    background: linear-gradient(145deg, #e9ecef, #dee2e6);
+    color: #212529;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* التجاوب مع الشاشات الصغيرة */
+@media (max-width: 768px) {
+    .portfolio-modal-content {
+        width: 98%;
+        margin: 10px;
+        max-height: 98vh;
+    }
+    
+    .portfolio-modal-header {
+        padding: 30px 25px 25px;
+    }
+    
+    .portfolio-modal-title {
+        font-size: 24px;
+        margin-right: 60px;
+    }
+    
+    .portfolio-modal-body {
+        padding: 25px;
+    }
+    
+    .portfolio-screenshots {
+        padding: 20px;
+    }
+    
+    .screenshot-item {
+        width: 240px;
+        height: 160px;
+    }
+    
+    .portfolio-info {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 25px;
+    }
+    
+    .portfolio-info-item {
+        padding: 15px;
+    }
+    
+    .portfolio-description {
+        padding: 25px;
+    }
+    
+    .portfolio-features-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .portfolio-client-review {
+        padding: 25px;
+    }
+    
+    .portfolio-client-review-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+    
+    .portfolio-client-review-image {
+        width: 200px;
+        
+        height:400px;
+    }
+    
+    .portfolio-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .portfolio-action-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 24px;
+        font-size: 16px;
+    }
+    
+    .portfolio-quick-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .portfolio-stat-item {
+        padding: 12px;
+    }
+    
+    .portfolio-stat-value {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .portfolio-modal-content {
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+        max-height: 100vh;
+    }
+    
+    .portfolio-modal-header {
+        border-radius: 0;
+        padding: 25px 20px 20px;
+    }
+    
+    .portfolio-modal-title {
+        font-size: 20px;
+    }
+    
+    .portfolio-modal-body {
+        padding: 20px;
+    }
+    
+    .screenshot-item {
+        width: 200px;
+        height: 140px;
+    }
+    
+    .portfolio-quick-stats {
+        grid-template-columns: 1fr;
+    }
+}
+

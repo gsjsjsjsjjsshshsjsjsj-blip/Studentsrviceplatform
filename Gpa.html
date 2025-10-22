@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>حاسبة المعدل التراكمي GPA الشاملة</title>
+  <style>
+    :root {
+      --primary-color: #0f4c81;
+      --secondary-color: #0a84d6;
+      --success-color: #008000;
+      --error-color: #b00020;
+      --cumulative-color: #e67e22;
+      --light-bg: #f5f8fb;
+      --white-bg: #fff;
+      --text-color: #0b2436;
+      --border-color: #e6eef8;
+    }
+    body {
+      font-family: "Segoe UI", "Noto Naskh Arabic", sans-serif;
+      background: var(--light-bg);
+      margin: 0;
+      padding: 15px;
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 950px;
+      margin: auto;
+    }
+    /* --- زر الرجوع --- */
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .back-btn {
+      display: inline-block;
+      padding: 8px 16px;
+      background-color: var(--secondary-color);
+      color: var(--white-bg);
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 14px;
+      transition: background-color 0.2s;
+    }
+    .back-btn:hover {
+      background-color: var(--primary-color);
+    }
+    h1 {
+      text-align: center;
+      margin: 0; /* تم تعديل الهامش */
+      font-size: 24px;
+      color: var(--primary-color);
+      flex-grow: 1; /* لجعل العنوان يأخذ المساحة المتبقية */
+    }
+    h2 {
+      font-size: 18px;
+      margin-top: 0;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+    .card {
+      background: var(--white-bg);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    input, button, select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      cursor: pointer;
+      border: none;
+      color: var(--white-bg);
+      font-weight: bold;
+      transition: opacity 0.2s;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .error {
+      color: var(--error-color);
+      font-size: 13px;
+      margin-top: 4px;
+      min-height: 1em;
+    }
+    .system-selector, .cumulative-section {
+      padding: 20px;
+    }
+    .cumulative-section .fields {
+      display: flex;
+      gap: 15px;
+    }
+    .course-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-end;
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+    .course-row > div {
+      flex: 1 1 120px;
+    }
+    .remove {
+      background: #ffdede;
+      color: #700;
+      padding: 10px;
+      max-width: 100px;
+    }
+    .add-btn { background: var(--secondary-color); margin-top: 10px; }
+    .calc-btn { background: var(--success-color); margin-top: 10px; }
+    .reset-btn { background: var(--error-color); margin-top: 10px; }
+    #gpaOutput {
+      margin-top: 20px;
+    }
+    .results-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 15px;
+      background: var(--light-bg);
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .summary-item {
+      background: var(--white-bg);
+      padding: 15px;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .summary-item .label {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 5px;
+    }
+    .summary-item .value {
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+    .summary-item .value.gpa { color: var(--success-color); }
+    .summary-item .value.cumulative { color: var(--cumulative-color); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid var(--border-color);
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background: var(--primary-color);
+      color: var(--white-bg);
+    }
+    @media(max-width: 600px) {
+      .header-nav {
+        flex-direction: column;
+        gap: 15px;
+      }
+      .course-row, .cumulative-section .fields {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .remove {
+        margin-top: 10px;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header-nav">
+      <!-- زر الرجوع - استبدل index.html برابط صفحتك الرئيسية -->
+      <a href="index.html" class="back-btn">→ الرجوع للقائمة الرئيسية</a>
+      <h1>حاسبة المعدل التراكمي GPA</h1>
+    </div>
+    
+    <div class="system-selector card">
+      <label for="gpaSystem">1. اختر نظام المعدل في جامعتك:</label>
+      <select id="gpaSystem">
+        <option value="5">نظام المعدل من 5 (GPA out of 5)</option>
+        <option value="4">نظام المعدل من 4 (GPA out of 4)</option>
+      </select>
+    </div>
+
+    <div class="cumulative-section card">
+      <label>2. لحساب المعدل التراكمي، أدخل بياناتك السابقة (اختياري):</label>
+      <div class="fields">
+        <div>
+          <label for="prevGPA">المعدل التراكمي السابق</label>
+          <input type="number" id="prevGPA" step="0.01" placeholder="مثال: 4.25">
+        </div>
+        <div>
+          <label for="prevHours">الساعات المكتسبة سابقًا</label>
+          <input type="number" id="prevHours" step="1" placeholder="مثال: 90">
+        </div>
+      </div>
+      <div id="cumulativeError" class="error"></div>
+    </div>
+
+    <section class="card" id="coursesCard">
+      <h2>3. أدخل مقررات الفصل الحالي:</h2>
+      <div id="coursesList"></div>
+      <button class="add-btn" id="addCourseBtn">+ إضافة مقرر</button>
+      <button class="calc-btn" id="calculateBtn">احسب المعدل</button>
+      <button class="reset-btn" id="resetBtn">إعادة تعيين</button>
+      <div id="gpaOutput"></div>
+    </section>
+  </div>
+
+<script>
+// لا يوجد أي تغييرات على كود JavaScript
+// الكود بالكامل كما هو في الرد السابق
+document.addEventListener('DOMContentLoaded', () => {
+  const gpaSystemSelect = document.getElementById('gpaSystem');
+  const prevGPAInput = document.getElementById('prevGPA');
+  const prevHoursInput = document.getElementById('prevHours');
+  const cumulativeError = document.getElementById('cumulativeError');
+  const coursesList = document.getElementById('coursesList');
+  const gpaOutput = document.getElementById('gpaOutput');
+  const addCourseBtn = document.getElementById('addCourseBtn');
+  const calculateBtn = document.getElementById('calculateBtn');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const GRADE_MAP = [
+    {min:95, max:100, ar:'ممتاز مرتفع', en:'Exceptional', code_ar:'أ+', code_en:'A+', w5:5.00, w4:4.00},
+    {min:90, max:95,  ar:'ممتاز', en:'Excellent', code_ar:'أ', code_en:'A', w5:4.75, w4:3.75},
+    {min:85, max:90,  ar:'جيد جداً مرتفع', en:'Superior', code_ar:'ب+', code_en:'B+', w5:4.50, w4:3.50},
+    {min:80, max:85,  ar:'جيد جداً', en:'Very Good', code_ar:'ب', code_en:'B', w5:4.00, w4:3.00},
+    {min:75, max:80,  ar:'جيد مرتفع', en:'Above Average', code_ar:'ج+', code_en:'C+', w5:3.50, w4:2.50},
+    {min:70, max:75,  ar:'جيد', en:'Good', code_ar:'ج', code_en:'C', w5:3.00, w4:2.00},
+    {min:65, max:70,  ar:'مقبول مرتفع', en:'High Pass', code_ar:'د+', code_en:'D+', w5:2.50, w4:1.50},
+    {min:60, max:65,  ar:'مقبول', en:'Pass', code_ar:'د', code_en:'D', w5:2.00, w4:1.00},
+    {min:0,  max:60,  ar:'راسب', en:'Fail', code_ar:'هـ', code_en:'F', w5:1.00, w4:0.00}
+  ];
+
+  addCourseBtn.addEventListener('click', addCourseRow);
+  calculateBtn.addEventListener('click', calculateGPA);
+  resetBtn.addEventListener('click', resetAll);
+  coursesList.addEventListener('click', (e) => {
+    if (e.target.classList.contains('remove')) {
+      e.target.closest('.course-row').remove();
+    }
+  });
+  gpaSystemSelect.addEventListener('change', () => {
+    if (gpaOutput.innerHTML.trim() !== "") calculateGPA();
+  });
+
+  function calculateGPA() {
+    const selectedSystem = gpaSystemSelect.value;
+    const weightKey = `w${selectedSystem}`;
+
+    const prevGPA = parseFloat(prevGPAInput.value) || 0;
+    const prevHours = parseInt(prevHoursInput.value) || 0;
+    cumulativeError.textContent = "";
+    if ((prevGPA > 0 && prevHours === 0) || (prevGPA === 0 && prevHours > 0)) {
+      cumulativeError.textContent = "⚠️ يرجى إدخال المعدل وعدد الساعات معًا، أو تركهما فارغين.";
+      return;
+    }
+    if (prevGPA > selectedSystem || prevGPA < 0) {
+      cumulativeError.textContent = `⚠️ المعدل السابق يجب أن يكون بين 0 و ${selectedSystem}.`;
+      return;
+    }
+
+    const courseRows = coursesList.querySelectorAll(".course-row");
+    gpaOutput.innerHTML = "";
+    if (courseRows.length === 0) {
+        gpaOutput.innerHTML = `<p class="error" style="text-align:center;">⚠️ يرجى إضافة مقرر واحد على الأقل.</p>`;
+        return;
+    }
+
+    let allRowsAreValid = true;
+    const courses = [];
+    courseRows.forEach(row => {
+      if (validateCourse(row)) {
+        courses.push({
+          name: row.querySelector(".c-name").value.trim(),
+          p: Number(row.querySelector(".c-percent").value),
+          u: Number(row.querySelector(".c-units").value)
+        });
+      } else { allRowsAreValid = false; }
+    });
+
+    if (!allRowsAreValid) return;
+
+    let semesterUnits = 0, semesterPoints = 0;
+    courses.forEach(course => {
+      const grade = findGradeByPercentage(course.p);
+      if (grade) {
+        semesterPoints += grade[weightKey] * course.u;
+        semesterUnits += course.u;
+      }
+    });
+
+    if (semesterUnits === 0) return;
+
+    const semesterGPA = (semesterPoints / semesterUnits).toFixed(3);
+
+    const prevPoints = prevGPA * prevHours;
+    const totalPoints = prevPoints + semesterPoints;
+    const totalHours = prevHours + semesterUnits;
+    const cumulativeGPA = totalHours > 0 ? (totalPoints / totalHours).toFixed(3) : "0.000";
+
+    let summaryHTML = `
+      <div class="summary-item">
+        <div class="label">المعدل الفصلي</div>
+        <div class="value gpa">${semesterGPA}</div>
+      </div>
+    `;
+
+    if (prevHours > 0) {
+      summaryHTML += `
+        <div class="summary-item">
+          <div class="label">المعدل التراكمي الجديد</div>
+          <div class="value gpa cumulative">${cumulativeGPA}</div>
+        </div>
+        <div class="summary-item">
+          <div class="label">إجمالي الساعات المكتسبة</div>
+          <div class="value">${totalHours}</div>
+        </div>
+      `;
+    } else {
+       summaryHTML += `
+        <div class="summary-item">
+          <div class="label">إجمالي ساعات الفصل</div>
+          <div class="value">${semesterUnits}</div>
+        </div>
+       `;
+    }
+    
+    const finalGPAForGrade = prevHours > 0 ? cumulativeGPA : semesterGPA;
+    const finalGrade = findGradeByPercentage((finalGPAForGrade / selectedSystem) * 100);
+    if(finalGrade) {
+        summaryHTML += `
+          <div class="summary-item">
+            <div class="label">التقدير العام</div>
+            <div class="value">${finalGrade.ar}</div>
+          </div>
+        `;
+    }
+
+    const resultRows = courses.map(course => {
+      const grade = findGradeByPercentage(course.p);
+      return `<tr>
+        <td>${escapeHTML(course.name)}</td>
+        <td>${course.p}%</td>
+        <td>${course.u}</td>
+        <td>${grade.code_ar} / ${grade.code_en}</td>
+        <td>${grade.ar} / ${grade.en}</td>
+      </tr>`;
+    }).join("");
+
+    gpaOutput.innerHTML = `
+      <div class="results-summary">${summaryHTML}</div>
+      <h2>تفاصيل المقررات</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>المقرر</th><th>الدرجة</th><th>الساعات</th>
+            <th>الرمز (عربي/إنجليزي)</th><th>التقدير (عربي/إنجليزي)</th>
+          </tr>
+        </thead>
+        <tbody>${resultRows}</tbody>
+      </table>
+    `;
+  }
+
+  function resetAll() {
+    coursesList.innerHTML = "";
+    gpaOutput.innerHTML = "";
+    prevGPAInput.value = "";
+    prevHoursInput.value = "";
+    cumulativeError.textContent = "";
+    addCourseRow();
+  }
+
+  function findGradeByPercentage(p) {
+    return GRADE_MAP.find(g => p >= g.min && (p < g.max || (g.max === 100 && p <= 100))) || null;
+  }
+
+  function addCourseRow() {
+    const courseId = `course-${Date.now()}`;
+    const div = document.createElement("div");
+    div.className = "course-row";
+    div.id = courseId;
+    div.innerHTML = `
+      <div>
+        <label for="name-${courseId}">اسم المقرر</label>
+        <input type="text" id="name-${courseId}" class="c-name" placeholder="مثال: فيزياء 101">
+        <div class="error name-error"></div>
+      </div>
+      <div>
+        <label for="percent-${courseId}">الدرجة (من 100)</label>
+        <input type="number" id="percent-${courseId}" class="c-percent" min="0" max="100">
+        <div class="error percent-error"></div>
+      </div>
+      <div>
+        <label for="units-${courseId}">الساعات المعتمدة</label>
+        <input type="number" id="units-${courseId}" class="c-units" min="1" step="1">
+        <div class="error units-error"></div>
+      </div>
+      <button type="button" class="remove" aria-label="حذف المقرر">🗑 حذف</button>
+    `;
+    coursesList.appendChild(div);
+  }
+
+  function validateCourse(row) {
+    let isValid = true;
+    const nameInput = row.querySelector(".c-name"), percentInput = row.querySelector(".c-percent"), unitsInput = row.querySelector(".c-units");
+    const nameErr = row.querySelector(".name-error"), percentErr = row.querySelector(".percent-error"), unitsErr = row.querySelector(".units-error");
+    nameErr.textContent = ""; percentErr.textContent = ""; unitsErr.textContent = "";
+    if (!nameInput.value.trim()) { nameErr.textContent = "⚠️ اسم المقرر مطلوب"; isValid = false; }
+    const percentValue = percentInput.value;
+    if (percentValue === "") { percentErr.textContent = "⚠️ الدرجة مطلوبة"; isValid = false; }
+    else if (isNaN(percentValue) || Number(percentValue) < 0 || Number(percentValue) > 100) { percentErr.textContent = "⚠️ الدرجة يجب أن تكون بين 0 و100"; isValid = false; }
+    const unitsValue = unitsInput.value;
+    if (unitsValue === "") { unitsErr.textContent = "⚠️ عدد الساعات مطلوب"; isValid = false; }
+    else if (isNaN(unitsValue) || Number(unitsValue) <= 0) { unitsErr.textContent = "⚠️ عدد الساعات يجب أن يكون أكبر من 0"; isValid = false; }
+    return isValid;
+  }
+
+  function escapeHTML(str) {
+    return str.replace(/[&<>'"]/g, 
+      tag => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          "'": '&#39;',
+          '"': '&quot;'
+        }[tag] || tag)
+    );
+  }
+
+  addCourseRow();
+});
+</script>
+</body>
+</html>
